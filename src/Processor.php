@@ -31,7 +31,7 @@ class Processor
 
         $request = new Request(
             'get',
-            $this->getPath("/inspections/dashboard"),
+            $this->getPath("/inspections/info/dashboard"),
             [
                 'Content-Type' => 'application/json',
                 'X-LOCATION' => $locationId
@@ -39,12 +39,46 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return $response;
+        return json_decode($response->getContents());
+    }
+
+    public function getInspectionsStatistic($locationId)
+    {
+        $client = new GuzzleClient();
+
+        $request = new Request(
+            'get',
+            $this->getPath("/inspections/info/stats"),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+        return json_decode($response->getContents());
+    }
+
+    public function getWorkOrdersDashboard($locationId)
+    {
+        $client = new GuzzleClient();
+
+        $request = new Request(
+            'get',
+            $this->getPath("/workOrders/info/dashboard"),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+        return json_decode($response->getContents());
     }
 
     protected function getPath($path)
     {
-        return $this->endpoint . '/' . $path;
+        return $this->endpoint . $path;
     }
 
     /**
@@ -56,11 +90,6 @@ class Processor
      */
     public function send(GuzzleClient $client, Request $request)
     {
-        $uri = $request->getUri();
-        $path = $this->endpoint . $uri->getPath();
-        $uri = $uri->withPath($path);
-        $request = $request->withUri($uri);
-
         try {
             $response = $client->send($request);
             return $response->getBody();
