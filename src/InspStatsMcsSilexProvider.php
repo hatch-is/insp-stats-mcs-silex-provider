@@ -1,16 +1,16 @@
 <?php
 
-namespace InspectionStatsMcs\IonicPushService;
+namespace InspectionStatsMcs;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
 /**
- * Class IonicPushServiceProvider
+ * Class InspStatsMcsSilexProvider
  *
- * @package InspectionStatsMcs\IonicPushService
+ * @package InspectionStatsMcs
  */
-class IonicPushServiceProvider implements ServiceProviderInterface
+class InspStatsMcsSilexProvider implements ServiceProviderInterface
 {
     /**
      * Registers services on the given app.
@@ -20,8 +20,15 @@ class IonicPushServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-
+        $app['hatch-is.insp-stats-mcs.processor'] = $app->share(
+            function () use ($app) {
+                return new Processor(
+                    $app['hatch-is.insp-stats-mcs.endpoint']
+                );
+            }
+        );
     }
+
     /**
      * Bootstraps the application.
      *
@@ -31,6 +38,6 @@ class IonicPushServiceProvider implements ServiceProviderInterface
      */
     public function boot(Application $app)
     {
-        // TODO: Implement boot() method.
+
     }
 }
