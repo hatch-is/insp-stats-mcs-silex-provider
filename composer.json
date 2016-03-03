@@ -1,5 +1,6 @@
 {
     "name": "hatch-is/insp-stats-mcs-silex-provider",
+    "version": "0.0.1",
     "description": "Hatch silex provider for inspections statistic micro-service",
     "license": "MIT",
     "type": "project",
