@@ -110,6 +110,44 @@ class Processor
         return json_decode($response->getContents());
     }
 
+    /**
+     * @param $locationId
+     * @param \DateTime $date
+     * @param string $state
+     *
+     * @return mixed
+     */
+    public function getInspectionReport($locationId, $state = 'completed', $date = null)
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if (null !== $date) {
+            $query['date'] = date('c', $date->getTimestamp());
+        }
+
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf(
+                    '/reports/inspections/%s?%s',
+                    $state,
+                    $query
+                )
+            ),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
     protected function getPath($path)
     {
         return $this->endpoint . $path;
