@@ -83,25 +83,26 @@ class Processor
      * @return mixed
      * @throws \Exception
      */
-    public function getSimpleTemplateReport($locationId, $createdDate, $modifiedDate = null)
+    public function getSimpleTemplateReport($locationId, $createdDate = null, $modifiedDate = null)
     {
         $client = new GuzzleClient();
 
         $query = [];
         if(null !== $createdDate) {
-            $query['createdDate'] = urlencode(date('c', $createdDate->getTimestamp()));
+            $query['createdDate'] = date('c', $createdDate->getTimestamp());
         }
         if(null !== $modifiedDate) {
-            $query['modifiedDate'] = urlencode(date('c', $modifiedDate->getTimestamp()));;
+            $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());;
         }
+
+        $query = http_build_query($query);
 
         $request = new Request(
             'get',
-            $this->getPath('/reports/templates/simple'),
+            $this->getPath('/reports/templates/simple?'.$query),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId,
-                'query' => $query
+                'X-LOCATION' => $locationId
             ]
         );
 
