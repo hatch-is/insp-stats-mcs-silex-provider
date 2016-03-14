@@ -148,6 +148,61 @@ class Processor
         return json_decode($response->getContents());
     }
 
+    /**
+     * @param $locationId
+     * @param null $templateId
+     * @param \DateTime $createdDate
+     * @param \DateTime $modifiedDate
+     * @param null $state
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSimpleTemplateVersionReport(
+        $locationId,
+        $templateId = null,
+        $createdDate = null,
+        $modifiedDate = null,
+        $state = null
+    )
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if (null !== $createdDate) {
+            $query['createdDate'] = date('c', $createdDate->getTimestamp());
+        }
+        if (null !== $modifiedDate) {
+            $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());
+        }
+        if (null !== $state) {
+            $query['state'] = $state;
+        }
+        if (null !== $templateId) {
+            $query['templateId'] = $templateId;
+        }
+
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf(
+                    '/reports/templateVersions/simple?%s',
+                    $query
+                )
+            ),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
     protected function getPath($path)
     {
         return $this->endpoint . $path;
