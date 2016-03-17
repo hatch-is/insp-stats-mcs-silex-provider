@@ -203,6 +203,56 @@ class Processor
         return json_decode($response->getContents());
     }
 
+    /**
+     * @param $locationId
+     * @param \DateTime $createdDate
+     * @param \DateTime $completedDate
+     * @param null $state
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSimpleWorkOrderReport(
+        $locationId,
+        $createdDate = null,
+        $completedDate = null,
+        $state = null
+    )
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if (null !== $createdDate) {
+            $query['createdDate'] = date('c', $createdDate->getTimestamp());
+        }
+        if (null !== $completedDate) {
+            $query['completedDate'] = date('c', $completedDate->getTimestamp());
+        }
+        if (null !== $state) {
+            $query['state'] = $state;
+        }
+
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf(
+                    '/reports/workOrders/simple?%s',
+                    $query
+                )
+            ),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
     protected function getPath($path)
     {
         return $this->endpoint . $path;
