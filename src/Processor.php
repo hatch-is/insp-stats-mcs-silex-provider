@@ -25,13 +25,36 @@ class Processor
         $this->endpoint = $endpoint;
     }
 
-    public function getInspectionsDashboard($locationId)
+    /**
+     * @param $locationId
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getInspectionsDashboard($locationId, $start, $end)
     {
         $client = new GuzzleClient();
 
+        $query = [];
+        if(null !== $start) {
+            $query['start'] = date('c', $start->getTimestamp());
+        }
+        if(null !== $end) {
+            $query['end'] = date('c', $end->getTimestamp());;
+        }
+
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
-            $this->getPath("/inspections/info/dashboard"),
+            $this->getPath(
+                sprintf(
+                    '/inspections/info/dashboard?%s',
+                    $query
+                )
+            ),
             [
                 'Content-Type' => 'application/json',
                 'X-LOCATION' => $locationId
@@ -42,13 +65,36 @@ class Processor
         return json_decode($response->getContents());
     }
 
-    public function getInspectionsStatistic($locationId)
+    /**
+     * @param $locationId
+     * @param \DateTime $start
+     * @param \DateTIme $end
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getInspectionsStatistic($locationId, $start, $end)
     {
         $client = new GuzzleClient();
 
+        $query = [];
+        if(null !== $start) {
+            $query['start'] = date('c', $start->getTimestamp());
+        }
+        if(null !== $end) {
+            $query['end'] = date('c', $end->getTimestamp());;
+        }
+
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
-            $this->getPath("/inspections/info/stats"),
+            $this->getPath(
+                sprintf(
+                    '/inspections/info/stats?%s',
+                    $query
+                )
+            ),
             [
                 'Content-Type' => 'application/json',
                 'X-LOCATION' => $locationId
@@ -59,13 +105,36 @@ class Processor
         return json_decode($response->getContents());
     }
 
-    public function getWorkOrdersDashboard($locationId)
+    /**
+     * @param $locationId
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getWorkOrdersDashboard($locationId, $start, $end)
     {
         $client = new GuzzleClient();
 
+        $query = [];
+        if(null !== $start) {
+            $query['start'] = date('c', $start->getTimestamp());
+        }
+        if(null !== $end) {
+            $query['end'] = date('c', $end->getTimestamp());;
+        }
+
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
-            $this->getPath("/workOrders/info/dashboard"),
+            $this->getPath(
+                sprintf(
+                    '/workOrders/info/dashboard?%s',
+                    $query
+                )
+            ),
             [
                 'Content-Type' => 'application/json',
                 'X-LOCATION' => $locationId
