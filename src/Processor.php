@@ -19,14 +19,16 @@ class Processor
     public function __construct($endpoint)
     {
         if (null === $endpoint) {
-            throw new Exception('Inspection statistic service: endpoint is null');
+            throw new Exception(
+                'Inspection statistic service: endpoint is null'
+            );
         }
 
         $this->endpoint = $endpoint;
     }
 
     /**
-     * @param $locationId
+     * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
      *
@@ -38,10 +40,10 @@ class Processor
         $client = new GuzzleClient();
 
         $query = [];
-        if(null !== $start) {
+        if (null !== $start) {
             $query['start'] = date('c', $start->getTimestamp());
         }
-        if(null !== $end) {
+        if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());;
         }
 
@@ -57,7 +59,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -66,7 +68,7 @@ class Processor
     }
 
     /**
-     * @param $locationId
+     * @param           $locationId
      * @param \DateTime $start
      * @param \DateTIme $end
      *
@@ -78,10 +80,10 @@ class Processor
         $client = new GuzzleClient();
 
         $query = [];
-        if(null !== $start) {
+        if (null !== $start) {
             $query['start'] = date('c', $start->getTimestamp());
         }
-        if(null !== $end) {
+        if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());;
         }
 
@@ -97,7 +99,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -106,7 +108,7 @@ class Processor
     }
 
     /**
-     * @param $locationId
+     * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
      *
@@ -118,10 +120,10 @@ class Processor
         $client = new GuzzleClient();
 
         $query = [];
-        if(null !== $start) {
+        if (null !== $start) {
             $query['start'] = date('c', $start->getTimestamp());
         }
-        if(null !== $end) {
+        if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());;
         }
 
@@ -137,7 +139,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -146,21 +148,23 @@ class Processor
     }
 
     /**
-     * @param $locationId
+     * @param           $locationId
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
+     *
      * @return mixed
      * @throws \Exception
      */
-    public function getSimpleTemplateReport($locationId, $createdDate = null, $modifiedDate = null)
-    {
+    public function getSimpleTemplateReport($locationId, $createdDate = null,
+        $modifiedDate = null
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
-        if(null !== $createdDate) {
+        if (null !== $createdDate) {
             $query['createdDate'] = date('c', $createdDate->getTimestamp());
         }
-        if(null !== $modifiedDate) {
+        if (null !== $modifiedDate) {
             $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());;
         }
 
@@ -168,10 +172,10 @@ class Processor
 
         $request = new Request(
             'get',
-            $this->getPath('/reports/templates/simple?'.$query),
+            $this->getPath('/reports/templates/simple?' . $query),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -180,19 +184,34 @@ class Processor
     }
 
     /**
-     * @param $locationId
-     * @param \DateTime $date
-     * @param string $state
+     * @param             $locationId
+     * @param string      $state
+     * @param \DateTime   $date
+     * @param null        $stateParam
+     * @param \DateTime   $start
+     * @param \DateTime   $end
      *
      * @return mixed
+     * @throws \Exception
      */
-    public function getInspectionReport($locationId, $state = 'completed', $date = null)
+    public function getInspectionReport($locationId, $state = 'completed',
+        $date = null, $stateParam = null, $start = null, $end = null
+    )
     {
         $client = new GuzzleClient();
 
         $query = [];
         if (null !== $date) {
             $query['date'] = date('c', $date->getTimestamp());
+        }
+        if (null !== $stateParam) {
+            $query['state'] = $stateParam;
+        }
+        if (null !== $start) {
+            $query['start'] = date('c', $start->getTimestamp());
+        }
+        if (null !== $end) {
+            $query['end'] = date('c', $end->getTimestamp());
         }
 
         $query = http_build_query($query);
@@ -208,7 +227,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -218,11 +237,11 @@ class Processor
     }
 
     /**
-     * @param $locationId
-     * @param null $templateId
+     * @param           $locationId
+     * @param null      $templateId
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
-     * @param null $state
+     * @param null      $state
      *
      * @return mixed
      * @throws \Exception
@@ -233,8 +252,7 @@ class Processor
         $createdDate = null,
         $modifiedDate = null,
         $state = null
-    )
-    {
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -263,7 +281,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -273,10 +291,10 @@ class Processor
     }
 
     /**
-     * @param $locationId
+     * @param           $locationId
      * @param \DateTime $createdDate
      * @param \DateTime $completedDate
-     * @param null $state
+     * @param null      $state
      *
      * @return mixed
      * @throws \Exception
@@ -286,8 +304,7 @@ class Processor
         $createdDate = null,
         $completedDate = null,
         $state = null
-    )
-    {
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -313,7 +330,7 @@ class Processor
             ),
             [
                 'Content-Type' => 'application/json',
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -329,7 +346,7 @@ class Processor
 
     /**
      * @param GuzzleClient $client
-     * @param Request $request
+     * @param Request      $request
      *
      * @return \Psr\Http\Message\StreamInterface
      * @throws \Exception
@@ -340,7 +357,9 @@ class Processor
             $response = $client->send($request);
             return $response->getBody();
         } catch (GuzzleClientException $e) {
-            throw new \Exception('Something bad happened with statistic service', 0, $e);
+            throw new \Exception(
+                'Something bad happened with statistic service', 0, $e
+            );
         }
     }
 }
