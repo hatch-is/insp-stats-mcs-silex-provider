@@ -28,6 +28,50 @@ class Processor
     }
 
     /**
+     * @param $broadcastId
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function analyzeBroadcastMessage($broadcastId)
+    {
+        $client = new GuzzleClient();
+        $request = new Request(
+            'get',
+            $this->getPath(sprintf('/broadcast/%s/analytic', $broadcastId))
+        );
+        $response = $this->send($client, $request);
+        return json_decode($response->getContents());
+    }
+
+    /**
+     * @param array $filter
+     * @param int   $skip
+     * @param int   $limit
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function analyzeBroadcastMessages($filter = [], $skip = 0, $limit = 0)
+    {
+        $client = new GuzzleClient();
+
+        $query = [
+            'skip' => $skip,
+            'limit' => $limit,
+            'filter' => $filter
+        ];
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(sprintf('/broadcast/analytic?%s', $query))
+        );
+        $response = $this->send($client, $request);
+        return json_decode($response->getContents());
+    }
+
+    /**
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
