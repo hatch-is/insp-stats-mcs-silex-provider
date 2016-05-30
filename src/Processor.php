@@ -45,21 +45,24 @@ class Processor
     }
 
     /**
-     * @param int $skip
-     * @param int $limit
+     * @param array $filter
+     * @param int   $skip
+     * @param int   $limit
      *
      * @return mixed
      * @throws \Exception
      */
-    public function analyzeBroadcastMessages($skip = 0, $limit = 0)
+    public function analyzeBroadcastMessages($filter = [], $skip = 0, $limit = 0)
     {
         $client = new GuzzleClient();
 
         $query = [
             'skip' => $skip,
-            'limit' => $limit
+            'limit' => $limit,
+            'filter' => $filter
         ];
         $query = http_build_query($query);
+
         $request = new Request(
             'get',
             $this->getPath(sprintf('/broadcast/analytic?%s', $query))
