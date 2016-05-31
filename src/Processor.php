@@ -323,7 +323,7 @@ class Processor
             'get',
             $this->getPath(
                 sprintf(
-                    '/reports/followUps/simple?%s',
+                    '/reports/followUp/simple?%s',
                     $query
                 )
             ),
