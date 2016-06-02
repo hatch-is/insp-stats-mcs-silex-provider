@@ -159,7 +159,7 @@ class Processor
      * @return mixed
      * @throws \Exception
      */
-    public function getWorkOrdersDashboard($locationId, $start, $end)
+    public function getFollowUpsDashboard($locationId, $start, $end)
     {
         $client = new GuzzleClient();
 
@@ -177,7 +177,7 @@ class Processor
             'get',
             $this->getPath(
                 sprintf(
-                    '/workOrders/info/dashboard?%s',
+                    '/followUps/info/dashboard?%s',
                     $query
                 )
             ),
@@ -240,8 +240,7 @@ class Processor
      */
     public function getInspectionReport($locationId, $state = 'completed',
         $date = null, $stateParam = null, $start = null, $end = null
-    )
-    {
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -343,7 +342,7 @@ class Processor
      * @return mixed
      * @throws \Exception
      */
-    public function getSimpleWorkOrderReport(
+    public function getSimpleFollowUpReport(
         $locationId,
         $createdDate = null,
         $completedDate = null,
@@ -368,7 +367,7 @@ class Processor
             'get',
             $this->getPath(
                 sprintf(
-                    '/reports/workOrders/simple?%s',
+                    '/reports/followUp/simple?%s',
                     $query
                 )
             ),
