@@ -382,6 +382,79 @@ class Processor
         return json_decode($response->getContents());
     }
 
+    /**
+     * @param $locationId
+     * @param \DateTime $start
+     * @param \DateTime $end
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getInspectionsDashboardActivity($locationId, $start, $end)
+    {
+        $client = new GuzzleClient();
+
+        $query = [
+            'start' => date('c', $start->getTimestamp()),
+            'end'   => date('c', $end->getTimestamp())
+        ];
+
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf(
+                    '/dashboard/activity/inspections',
+                    $query
+                )
+            ),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION'   => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
+    /**
+     * @param $locationId
+     * @param \Datetime $start
+     * @param \DateTime $end
+     */
+    public function getInspectionsDashboardDailyActivity($locationId, $start, $end)
+    {
+        $client = new GuzzleClient();
+
+        $query = [
+            'start' => date('c', $start->getTimestamp()),
+            'end'   => date('c', $end->getTimestamp())
+        ];
+
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf(
+                    '/dashboard/dailyActivity/inspections',
+                    $query
+                )
+            ),
+            [
+                'Content-Type' => 'application/json',
+                'X-LOCATION'   => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
     protected function getPath($path)
     {
         return $this->endpoint . $path;
@@ -400,9 +473,27 @@ class Processor
             $response = $client->send($request);
             return $response->getBody();
         } catch (GuzzleClientException $e) {
-            throw new \Exception(
-                'Something bad happened with statistic service', 0, $e
-            );
+            $message = $this->formatErrorMessage($e);
+            throw new \Exception(json_encode($message), 0, $e);
         }
+    }
+
+    protected function formatErrorMessage($httpException)
+    {
+        $message = [
+            'message'  => 'Something bad happened with statistic service',
+            'request'  => [
+                'headers' => $httpException->getRequest()->getHeaders(),
+                'body'    => $httpException->getRequest()->getBody()
+            ],
+            'response' => [
+                'headers' => $httpException->getResponse()->getHeaders(),
+                'body'    => $httpException->getResponse()->getBody()
+                    ->getContents(),
+                'status'  => $httpException->getResponse()->getStatusCode()
+            ]
+        ];
+
+        return $message;
     }
 }
