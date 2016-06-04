@@ -405,7 +405,7 @@ class Processor
             'get',
             $this->getPath(
                 sprintf(
-                    '/dashboard/activity/inspections',
+                    '/dashboard/activity/inspections?%s',
                     $query
                 )
             ),
@@ -440,7 +440,7 @@ class Processor
             'get',
             $this->getPath(
                 sprintf(
-                    '/dashboard/dailyActivity/inspections',
+                    '/dashboard/dailyActivity/inspections?%s',
                     $query
                 )
             ),
