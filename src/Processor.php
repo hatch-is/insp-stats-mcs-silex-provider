@@ -280,6 +280,33 @@ class Processor
     }
 
     /**
+     * @param string $inspectionId
+     * @param string $userId
+     * @param string $type
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSingleInspectionsReport($inspectionId, $userId, $type)
+    {
+        $client = new GuzzleClient();
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/reports/inspections/single/%s", $inspectionId)
+            ),
+            [
+                'Content-Type' => $type,
+                'X-USER' => $userId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
+    /**
      * @param           $locationId
      * @param null      $templateId
      * @param \DateTime $createdDate
