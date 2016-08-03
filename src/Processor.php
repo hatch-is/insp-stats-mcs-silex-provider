@@ -59,13 +59,12 @@ class Processor
         $query = [
             'skip'   => $skip,
             'limit'  => $limit,
-            'filter' => $filter
+            'filter' => json_encode($filter)
         ];
         $query = http_build_query($query);
-
         $request = new Request(
             'get',
-            $this->getPath(sprintf('/broadcast/analytic?%s', $query))
+            $this->getPath(sprintf('/broadcasts/analytics?%s', $query))
         );
         $response = $this->send($client, $request);
         return json_decode($response->getContents());
