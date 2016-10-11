@@ -424,6 +424,24 @@ class Processor
         return json_decode($response->getContents());
     }
 
+    public function getSpecificReport($locationId)
+    {
+        $client = new GuzzleClient();
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/reports/specific")
+            ),
+            [
+                'X-LOCATION' => $locationId
+            ]
+        );
+        
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
     /**
      * @param           $locationId
      * @param null      $templateId
