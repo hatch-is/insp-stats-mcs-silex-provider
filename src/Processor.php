@@ -404,7 +404,6 @@ class Processor
      * @return mixed
      * @throws \Exception
      */
-
     public function getSingleInspectionsReport($inspectionId, $userId, $type)
     {
         $client = new GuzzleClient();
@@ -412,6 +411,33 @@ class Processor
             'get',
             $this->getPath(
                 sprintf("/reports/inspections/single/%s", $inspectionId)
+            ),
+            [
+                'Content-Type' => $type,
+                'X-USER' => $userId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return json_decode($response->getContents());
+    }
+
+    /**
+     * @param string $incidentId
+     * @param string $userId
+     * @param string $type
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getSingleIncidentsReport($incidentId, $userId, $type)
+    {
+        $client = new GuzzleClient();
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/reports/incidents/single/%s", $incidentId)
             ),
             [
                 'Content-Type' => $type,
