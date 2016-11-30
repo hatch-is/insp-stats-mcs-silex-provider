@@ -30,8 +30,7 @@ class Processor
     /**
      * @param $broadcastId
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function analyzeBroadcastMessage($broadcastId)
     {
@@ -41,24 +40,18 @@ class Processor
             $this->getPath(sprintf('/broadcast/%s/analytic', $broadcastId))
         );
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
      * @param array $filter
-     * @param int   $skip
-     * @param int   $limit
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function analyzeBroadcastMessages($filter = [], $skip = 0, $limit = 0
-    ) {
+    public function analyzeBroadcastMessages($filter = []) {
         $client = new GuzzleClient();
 
         $query = [
-            'skip'   => $skip,
-            'limit'  => $limit,
             'filter' => json_encode($filter)
         ];
         $query = http_build_query($query);
@@ -67,18 +60,18 @@ class Processor
             $this->getPath(sprintf('/broadcasts/analytics?%s', $query))
         );
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
+     * @param array     $filter
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getInspectionsDashboard($locationId, $start, $end)
+    public function getInspectionsDashboard($locationId, $start, $end, $filter = [])
     {
         $client = new GuzzleClient();
 
@@ -88,6 +81,10 @@ class Processor
         }
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());;
+        }
+
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -107,7 +104,7 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -115,8 +112,7 @@ class Processor
      * @param \DateTime $start
      * @param \DateTime $end
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getIncidentsDashboard($locationId, $start, $end)
     {
@@ -147,18 +143,19 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTIme $end
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
      */
-    public function getInspectionsStatistic($locationId, $start, $end)
+    public function getInspectionsStatistic($locationId, $start, $end, $filter = [])
     {
         $client = new GuzzleClient();
 
@@ -168,6 +165,10 @@ class Processor
         }
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());;
+        }
+
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -187,7 +188,7 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -227,7 +228,7 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -267,19 +268,20 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
      * @param           $locationId
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSimpleTemplateReport($locationId, $createdDate = null,
-        $modifiedDate = null
+        $modifiedDate = null, $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -289,6 +291,9 @@ class Processor
         }
         if (null !== $modifiedDate) {
             $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());;
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -303,13 +308,14 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
      * @param           $locationId
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
@@ -317,7 +323,8 @@ class Processor
     public function getSimpleIncidentTemplateReport(
         $locationId,
         $createdDate = null,
-        $modifiedDate = null
+        $modifiedDate = null,
+        $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -327,6 +334,9 @@ class Processor
         }
         if (null !== $modifiedDate) {
             $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());;
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -341,7 +351,7 @@ class Processor
         );
 
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -351,12 +361,13 @@ class Processor
      * @param null        $stateParam
      * @param \DateTime   $start
      * @param \DateTime   $end
+     * @param array       $filter
      *
      * @return mixed
      * @throws \Exception
      */
     public function getInspectionReport($locationId, $state = 'completed',
-        $date = null, $stateParam = null, $start = null, $end = null
+        $date = null, $stateParam = null, $start = null, $end = null, $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -372,6 +383,9 @@ class Processor
         }
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -393,7 +407,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -420,7 +434,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -447,16 +461,29 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
-    public function getSpecificReport($locationId)
+    /**
+     * @param       $locationId
+     * @param array $filter
+     *
+     * @return mixed
+     */
+    public function getSpecificReport($locationId, $filter = [])
     {
         $client = new GuzzleClient();
+
+        $query = [];
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
+        }
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/specific")
+                sprintf("/reports/specific?%s", $query)
             ),
             [
                 'X-LOCATION' => $locationId
@@ -465,7 +492,7 @@ class Processor
         
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -474,6 +501,7 @@ class Processor
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
      * @param null      $state
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
@@ -483,7 +511,8 @@ class Processor
         $templateId = null,
         $createdDate = null,
         $modifiedDate = null,
-        $state = null
+        $state = null,
+        $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -499,6 +528,9 @@ class Processor
         }
         if (null !== $templateId) {
             $query['templateId'] = $templateId;
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -519,7 +551,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -529,12 +561,13 @@ class Processor
      * @param null        $stateParam
      * @param \DateTime   $start
      * @param \DateTime   $end
+     * @param array       $filter
      *
      * @return mixed
      * @throws \Exception
      */
     public function getIncidentReport($locationId, $state = 'completed',
-        $date = null, $stateParam = null, $start = null, $end = null
+        $date = null, $stateParam = null, $start = null, $end = null, $filter = []
     )
     {
         $client = new GuzzleClient();
@@ -550,6 +583,9 @@ class Processor
         }
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
         $query = http_build_query($query);
         $request = new Request(
@@ -567,7 +603,7 @@ class Processor
             ]
         );
         $response = $this->send($client, $request);
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -576,6 +612,7 @@ class Processor
      * @param \DateTime $createdDate
      * @param \DateTime $modifiedDate
      * @param null      $state
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
@@ -585,7 +622,8 @@ class Processor
         $templateId = null,
         $createdDate = null,
         $modifiedDate = null,
-        $state = null
+        $state = null,
+        $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -601,6 +639,9 @@ class Processor
         }
         if (null !== $templateId) {
             $query['templateId'] = $templateId;
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -621,7 +662,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -629,6 +670,7 @@ class Processor
      * @param \DateTime $createdDate
      * @param \DateTime $completedDate
      * @param null      $state
+     * @param array     $filter
      *
      * @return mixed
      * @throws \Exception
@@ -637,7 +679,8 @@ class Processor
         $locationId,
         $createdDate = null,
         $completedDate = null,
-        $state = null
+        $state = null,
+        $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -650,6 +693,9 @@ class Processor
         }
         if (null !== $state) {
             $query['state'] = $state;
+        }
+        if (!empty($filter)) {
+            $query['filter'] = json_encode($filter);
         }
 
         $query = http_build_query($query);
@@ -670,7 +716,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -708,7 +754,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -746,13 +792,15 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
-     * @param           $locationId
-     * @param \Datetime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     *
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getInspectionsDashboardDailyActivity($locationId, $start,
         $end
@@ -782,7 +830,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     /**
@@ -817,7 +865,7 @@ class Processor
 
         $response = $this->send($client, $request);
 
-        return json_decode($response->getContents());
+        return $response;
     }
 
     protected function getPath($path)
@@ -836,7 +884,11 @@ class Processor
     {
         try {
             $response = $client->send($request);
-            return $response->getBody();
+            return [
+                'body' => json_decode($response->getBody()),
+                'headers' => $response->getHeaders(),
+                'statusCode' => $response->getStatusCode()
+            ];
         } catch (GuzzleClientException $e) {
             $message = $this->formatErrorMessage($e);
             throw new \Exception(json_encode($message), 0, $e);
