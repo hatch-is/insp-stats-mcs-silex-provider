@@ -417,12 +417,14 @@ class Processor
      * @param string $inspectionId
      * @param string $userId
      * @param string $type
+     * @param string $email
      *
      * @return mixed
      * @throws \Exception
      */
-    public function getSingleInspectionsReport($inspectionId, $userId, $type)
-    {
+    public function getSingleInspectionsReport(
+        $inspectionId, $userId, $type, $email
+    ) {
         $client = new GuzzleClient();
         $request = new Request(
             'get',
@@ -431,7 +433,8 @@ class Processor
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId
+                'X-USER' => $userId,
+                'X-EMAIL' => $email
             ]
         );
 
@@ -444,12 +447,14 @@ class Processor
      * @param string $incidentId
      * @param string $userId
      * @param string $type
+     * @param string $email
      *
      * @return mixed
      * @throws \Exception
      */
-    public function getSingleIncidentsReport($incidentId, $userId, $type)
-    {
+    public function getSingleIncidentsReport(
+        $incidentId, $userId, $type, $email
+    ) {
         $client = new GuzzleClient();
         $request = new Request(
             'get',
@@ -458,7 +463,8 @@ class Processor
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId
+                'X-USER' => $userId,
+                'X-EMAIL' => $email
             ]
         );
 
