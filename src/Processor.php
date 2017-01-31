@@ -418,18 +418,19 @@ class Processor
      * @param string $userId
      * @param string $type
      * @param string $email
+     * @param string $view
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $email
+        $inspectionId, $userId, $type, $email, $view
     ) {
         $client = new GuzzleClient();
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/inspections/single/%s", $inspectionId)
+                sprintf("/reports/inspections/single/%s?view=%s", $inspectionId, $view)
             ),
             [
                 'Content-Type' => $type,
@@ -532,18 +533,19 @@ class Processor
      * @param string $userId
      * @param string $type
      * @param string $email
+     * @param string $view
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $email
+        $incidentId, $userId, $type, $email, $view
     ) {
         $client = new GuzzleClient();
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/incidents/single/%s", $incidentId)
+                sprintf("/reports/incidents/single/%s?view=%s", $incidentId, $view)
             ),
             [
                 'Content-Type' => $type,
