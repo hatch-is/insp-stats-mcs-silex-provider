@@ -444,6 +444,35 @@ class Processor
         return $response;
     }
 
+    public function getIncidentsRate($locationId, $start, $end)
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if (null !== $start) {
+            $query['start'] = date('c', $start->getTimestamp());
+        }
+        if (null !== $end) {
+            $query['end'] = date('c', $end->getTimestamp());
+        }
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/dashboard/incidents/rir?%s", $query)
+            ),
+            [
+                'Content-Type' => "application/json",
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
     /**
      * @param $userId
      * @param $type
