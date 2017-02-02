@@ -450,10 +450,10 @@ class Processor
 
         $query = [];
         if (null !== $start) {
-            $query['start'] = date('c', $start->getTimestamp());
+            $query['start'] = $start;
         }
         if (null !== $end) {
-            $query['end'] = date('c', $end->getTimestamp());
+            $query['end'] = $end;
         }
         $query = http_build_query($query);
 
