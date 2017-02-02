@@ -444,6 +444,13 @@ class Processor
         return $response;
     }
 
+    /**
+     * @param $locationId
+     * @param $start
+     * @param $end
+     *
+     * @return \Psr\Http\Message\StreamInterface
+     */
     public function getIncidentsRate($locationId, $start, $end)
     {
         $client = new GuzzleClient();
@@ -461,6 +468,42 @@ class Processor
             'get',
             $this->getPath(
                 sprintf("/dashboard/incidents/rir?%s", $query)
+            ),
+            [
+                'Content-Type' => "application/json",
+                'X-LOCATION' => $locationId
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
+    /**
+     * @param $locationId
+     * @param $start
+     * @param $end
+     *
+     * @return \Psr\Http\Message\StreamInterface
+     */
+    public function getRecentFailures($locationId, $start, $end)
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if (null !== $start) {
+            $query['start'] = $start;
+        }
+        if (null !== $end) {
+            $query['end'] = $end;
+        }
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/dashboard/recentFailures?%s", $query)
             ),
             [
                 'Content-Type' => "application/json",
