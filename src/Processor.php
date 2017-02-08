@@ -419,18 +419,30 @@ class Processor
      * @param string $type
      * @param string $email
      * @param string $view
+     * @param string $emails
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $email, $view
+        $inspectionId, $userId, $type, $email, $view, $emails
     ) {
         $client = new GuzzleClient();
+
+        $query = [];
+        if ($view != null) {
+            $query['view'] = $view;
+        }
+        if ($emails != null) {
+            $query['emails'] = $emails;
+        }
+
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/inspections/single/%s?view=%s", $inspectionId, $view)
+                sprintf("/reports/inspections/single/%s?%s", $inspectionId, $query)
             ),
             [
                 'Content-Type' => $type,
@@ -606,18 +618,29 @@ class Processor
      * @param string $type
      * @param string $email
      * @param string $view
+     * @param string $emails
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $email, $view
+        $incidentId, $userId, $type, $email, $view, $emails
     ) {
         $client = new GuzzleClient();
+
+        $query = [];
+        if ($view != null) {
+            $query['view'] = $view;
+        }
+        if ($emails != null) {
+            $query['emails'] = $emails;
+        }
+        $query = http_build_query($query);
+
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/incidents/single/%s?view=%s", $incidentId, $view)
+                sprintf("/reports/incidents/single/%s?%s", $incidentId, $query)
             ),
             [
                 'Content-Type' => $type,
