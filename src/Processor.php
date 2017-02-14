@@ -417,7 +417,6 @@ class Processor
      * @param string $inspectionId
      * @param string $userId
      * @param string $type
-     * @param string $email
      * @param string $view
      * @param string $emails
      *
@@ -425,11 +424,10 @@ class Processor
      * @throws \Exception
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $email, $view, $emails
+        $inspectionId, $userId, $type, $view, $emails
     ) {
         $client = new GuzzleClient();
 
-        $query = [];
         if ($view != null) {
             $query['view'] = $view;
         }
@@ -447,7 +445,6 @@ class Processor
             [
                 'Content-Type' => $type,
                 'X-USER' => $userId,
-                'X-EMAIL' => $email
             ]
         );
 
@@ -616,19 +613,16 @@ class Processor
      * @param string $incidentId
      * @param string $userId
      * @param string $type
-     * @param string $email
      * @param string $view
      * @param string $emails
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $email, $view, $emails
+        $incidentId, $userId, $type, $view, $emails
     ) {
         $client = new GuzzleClient();
 
-        $query = [];
         if ($view != null) {
             $query['view'] = $view;
         }
@@ -645,7 +639,6 @@ class Processor
             [
                 'Content-Type' => $type,
                 'X-USER' => $userId,
-                'X-EMAIL' => $email
             ]
         );
 
