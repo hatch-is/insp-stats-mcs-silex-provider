@@ -420,12 +420,13 @@ class Processor
      * @param string $email
      * @param string $view
      * @param string $emails
+     * @param string $notes
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $email, $view, $emails
+        $inspectionId, $userId, $type, $email, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -435,6 +436,9 @@ class Processor
         }
         if ($emails != null) {
             $query['emails'] = $emails;
+        }
+        if ($notes != null) {
+            $query['notes'] = $notes;
         }
 
         $query = http_build_query($query);
@@ -619,12 +623,13 @@ class Processor
      * @param string $email
      * @param string $view
      * @param string $emails
+     * @param string $notes
      *
      * @return mixed
      * @throws \Exception
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $email, $view, $emails
+        $incidentId, $userId, $type, $email, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -634,6 +639,9 @@ class Processor
         }
         if ($emails != null) {
             $query['emails'] = $emails;
+        }
+        if ($notes != null) {
+            $query['notes'] = $notes;
         }
         $query = http_build_query($query);
 
