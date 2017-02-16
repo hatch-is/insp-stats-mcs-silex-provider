@@ -48,7 +48,8 @@ class Processor
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function analyzeBroadcastMessages($filter = []) {
+    public function analyzeBroadcastMessages($filter = [])
+    {
         $client = new GuzzleClient();
 
         $query = [
@@ -74,8 +75,9 @@ class Processor
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function getInspectionsDashboard($locationId, $start, $end, $filter = [])
-    {
+    public function getInspectionsDashboard($locationId, $start, $end,
+        $filter = []
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -158,8 +160,9 @@ class Processor
      * @return mixed
      * @throws \Exception
      */
-    public function getInspectionsStatistic($locationId, $start, $end, $filter = [])
-    {
+    public function getInspectionsStatistic($locationId, $start, $end,
+        $filter = []
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -370,7 +373,8 @@ class Processor
      * @throws \Exception
      */
     public function getInspectionReport($locationId, $state = 'completed',
-        $date = null, $stateParam = null, $start = null, $end = null, $filter = []
+        $date = null, $stateParam = null, $start = null, $end = null,
+        $filter = []
     ) {
         $client = new GuzzleClient();
 
@@ -446,12 +450,14 @@ class Processor
         $request = new Request(
             'get',
             $this->getPath(
-                sprintf("/reports/inspections/single/%s?%s", $inspectionId, $query)
+                sprintf(
+                    "/reports/inspections/single/%s?%s", $inspectionId, $query
+                )
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId,
-                'X-EMAIL' => $email
+                'X-USER'       => $userId,
+                'X-EMAIL'      => $email
             ]
         );
 
@@ -487,7 +493,7 @@ class Processor
             ),
             [
                 'Content-Type' => "application/json",
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -523,7 +529,7 @@ class Processor
             ),
             [
                 'Content-Type' => "application/json",
-                'X-LOCATION' => $locationId
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -533,17 +539,21 @@ class Processor
     }
 
     /**
-     * @param $userId
-     * @param $type
-     * @param $email
-     * @param $locationId
+     * @param           $userId
+     * @param           $type
+     * @param           $email
+     * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
+     * @param           $view
+     * @param           $emails
+     * @param           $notes
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getViolationsReport(
-        $userId, $type, $email, $locationId, $start, $end
+        $userId, $type, $email, $locationId, $start, $end, $view, $emails,
+        $notes
     ) {
         $client = new GuzzleClient();
 
@@ -553,6 +563,16 @@ class Processor
         }
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());
+        }
+
+        if (null != $view) {
+            $query['view'] = $view;
+        }
+        if (null != $emails) {
+            $query['emails'] = $emails;
+        }
+        if (null != $notes) {
+            $query['notes'] = $notes;
         }
         $query = http_build_query($query);
 
@@ -563,9 +583,9 @@ class Processor
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId,
-                'X-EMAIL' => $email,
-                'X-LOCATION' => $locationId
+                'X-USER'       => $userId,
+                'X-EMAIL'      => $email,
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -575,17 +595,17 @@ class Processor
     }
 
     /**
-     * @param $userId
-     * @param $type
-     * @param $email
-     * @param $locationId
+     * @param           $userId
+     * @param           $type
+     * @param           $email
+     * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getCoachingReport(
-        $userId, $type, $email, $locationId, $start, $end
+        $userId, $type, $email, $locationId, $start, $end, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -596,6 +616,16 @@ class Processor
         if (null !== $end) {
             $query['end'] = date('c', $end->getTimestamp());
         }
+
+        if (null != $view) {
+            $query['view'] = $view;
+        }
+        if (null != $emails) {
+            $query['emails'] = $emails;
+        }
+        if (null != $notes) {
+            $query['notes'] = $notes;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -605,9 +635,9 @@ class Processor
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId,
-                'X-EMAIL' => $email,
-                'X-LOCATION' => $locationId
+                'X-USER'       => $userId,
+                'X-EMAIL'      => $email,
+                'X-LOCATION'   => $locationId
             ]
         );
 
@@ -652,8 +682,8 @@ class Processor
             ),
             [
                 'Content-Type' => $type,
-                'X-USER' => $userId,
-                'X-EMAIL' => $email
+                'X-USER'       => $userId,
+                'X-EMAIL'      => $email
             ]
         );
 
@@ -687,7 +717,7 @@ class Processor
                 'X-LOCATION' => $locationId
             ]
         );
-        
+
         $response = $this->send($client, $request);
 
         return $response;
@@ -765,9 +795,9 @@ class Processor
      * @throws \Exception
      */
     public function getIncidentReport($locationId, $state = 'completed',
-        $date = null, $stateParam = null, $start = null, $end = null, $filter = []
-    )
-    {
+        $date = null, $stateParam = null, $start = null, $end = null,
+        $filter = []
+    ) {
         $client = new GuzzleClient();
         $query = [];
         if (null !== $date) {
@@ -1083,15 +1113,15 @@ class Processor
         try {
             $response = $client->send($request);
             $data = [
-                'body' => json_decode($response->getBody(), true),
-                'headers' => [],
+                'body'       => json_decode($response->getBody(), true),
+                'headers'    => [],
                 'statusCode' => $response->getStatusCode()
             ];
 
-            if(!empty($total = $response->getHeader('X-Total-Count'))) {
+            if (!empty($total = $response->getHeader('X-Total-Count'))) {
                 $data['headers']['X-Total-Count'] = $total;
             }
-            if(!empty($rate = $response->getHeader('X-Ratelimit-Remaining'))) {
+            if (!empty($rate = $response->getHeader('X-Ratelimit-Remaining'))) {
                 $data['headers']['X-Ratelimit-Remaining'] = $rate;
             }
             return $data;
