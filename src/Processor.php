@@ -421,7 +421,6 @@ class Processor
      * @param string $inspectionId
      * @param string $userId
      * @param string $type
-     * @param string $email
      * @param string $view
      * @param string $emails
      * @param string $notes
@@ -430,7 +429,7 @@ class Processor
      * @throws \Exception
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $email, $view, $emails, $notes
+        $inspectionId, $userId, $type, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -444,6 +443,9 @@ class Processor
         if ($notes != null) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
 
         $query = http_build_query($query);
 
@@ -455,9 +457,8 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
-                'X-EMAIL'      => $email
             ]
         );
 
@@ -538,10 +539,9 @@ class Processor
         return $response;
     }
 
-    /**
+    /*
      * @param           $userId
      * @param           $type
-     * @param           $email
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
@@ -552,7 +552,7 @@ class Processor
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getViolationsReport(
-        $userId, $type, $email, $locationId, $start, $end, $view, $emails,
+        $userId, $type, $locationId, $start, $end, $view, $emails,
         $notes
     ) {
         $client = new GuzzleClient();
@@ -574,6 +574,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -582,9 +585,8 @@ class Processor
                 sprintf("/reports/violations?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
-                'X-EMAIL'      => $email,
                 'X-LOCATION'   => $locationId
             ]
         );
@@ -597,7 +599,6 @@ class Processor
     /**
      * @param           $userId
      * @param           $type
-     * @param           $email
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
@@ -608,7 +609,7 @@ class Processor
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getNeedToOrderReport(
-        $userId, $type, $email, $locationId, $start, $end, $view, $emails,
+        $userId, $type, $locationId, $start, $end, $view, $emails,
         $notes
     ) {
         $client = new GuzzleClient();
@@ -630,6 +631,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -638,9 +642,8 @@ class Processor
                 sprintf("/reports/needtoorder?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
-                'X-EMAIL'      => $email,
                 'X-LOCATION'   => $locationId
             ]
         );
@@ -653,7 +656,6 @@ class Processor
     /**
      * @param           $userId
      * @param           $type
-     * @param           $email
      * @param           $locationId
      * @param \DateTime $start
      * @param \DateTime $end
@@ -661,7 +663,7 @@ class Processor
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getCoachingReport(
-        $userId, $type, $email, $locationId, $start, $end, $view, $emails, $notes
+        $userId, $type, $locationId, $start, $end, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -682,6 +684,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -690,9 +695,8 @@ class Processor
                 sprintf("/reports/coaching?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
-                'X-EMAIL'      => $email,
                 'X-LOCATION'   => $locationId
             ]
         );
@@ -706,7 +710,6 @@ class Processor
      * @param string $incidentId
      * @param string $userId
      * @param string $type
-     * @param string $email
      * @param string $view
      * @param string $emails
      * @param string $notes
@@ -715,7 +718,7 @@ class Processor
      * @throws \Exception
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $email, $view, $emails, $notes
+        $incidentId, $userId, $type, $view, $emails, $notes
     ) {
         $client = new GuzzleClient();
 
@@ -729,6 +732,9 @@ class Processor
         if ($notes != null) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -737,9 +743,8 @@ class Processor
                 sprintf("/reports/incidents/single/%s?%s", $incidentId, $query)
             ),
             [
-                'Content-Type' => $type,
-                'X-USER'       => $userId,
-                'X-EMAIL'      => $email
+                'Content-Type' => 'application/json',
+                'X-USER'       => $userId
             ]
         );
 
