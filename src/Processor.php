@@ -443,6 +443,9 @@ class Processor
         if ($notes != null) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
 
         $query = http_build_query($query);
 
@@ -454,7 +457,7 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
             ]
         );
@@ -571,6 +574,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -579,7 +585,7 @@ class Processor
                 sprintf("/reports/violations?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
                 'X-LOCATION'   => $locationId
             ]
@@ -625,6 +631,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -633,7 +642,7 @@ class Processor
                 sprintf("/reports/needtoorder?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
                 'X-LOCATION'   => $locationId
             ]
@@ -675,6 +684,9 @@ class Processor
         if (null != $notes) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -683,7 +695,7 @@ class Processor
                 sprintf("/reports/coaching?%s", $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId,
                 'X-LOCATION'   => $locationId
             ]
@@ -720,6 +732,9 @@ class Processor
         if ($notes != null) {
             $query['notes'] = $notes;
         }
+        if ($type != null) {
+            $query['type'] = $type;
+        }
         $query = http_build_query($query);
 
         $request = new Request(
@@ -728,7 +743,7 @@ class Processor
                 sprintf("/reports/incidents/single/%s?%s", $incidentId, $query)
             ),
             [
-                'Content-Type' => $type,
+                'Content-Type' => 'application/json',
                 'X-USER'       => $userId
             ]
         );
