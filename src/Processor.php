@@ -16,6 +16,11 @@ class Processor
 {
     protected $endpoint;
 
+    /**
+     * Processor constructor.
+     *
+     * @param $endpoint
+     */
     public function __construct($endpoint)
     {
         if (null === $endpoint) {
@@ -29,15 +34,20 @@ class Processor
 
     /**
      * @param $broadcastId
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function analyzeBroadcastMessage($broadcastId)
+    public function analyzeBroadcastMessage($broadcastId, $locationGroup)
     {
         $client = new GuzzleClient();
         $request = new Request(
             'get',
-            $this->getPath(sprintf('/broadcast/%s/analytic', $broadcastId))
+            $this->getPath(sprintf('/broadcast/%s/analytic', $broadcastId)),
+            [
+                'content-type'     => 'application/json',
+                'x-location-group' => $locationGroup
+            ]
         );
         $response = $this->send($client, $request);
         return $response;
@@ -45,10 +55,11 @@ class Processor
 
     /**
      * @param array $filter
+     * @param       $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function analyzeBroadcastMessages($filter = [])
+    public function analyzeBroadcastMessages($filter = [], $locationGroup)
     {
         $client = new GuzzleClient();
 
@@ -60,7 +71,8 @@ class Processor
             'get',
             $this->getPath(sprintf('/broadcasts/analytics?%s', $query)),
             [
-                'Content-Type' => 'application/json'
+                'content-type'     => 'application/json',
+                'x-location-group' => $locationGroup
             ]
         );
         $response = $this->send($client, $request);
@@ -68,15 +80,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @param array     $filter
+     * @param       $locationId
+     * @param       $start
+     * @param       $end
+     * @param array $filter
+     * @param       $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getInspectionsDashboard($locationId, $start, $end,
-        $filter = []
+        $filter = [], $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -103,8 +116,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -113,14 +127,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function getIncidentsDashboard($locationId, $start, $end)
-    {
+    public function getIncidentsDashboard($locationId, $start, $end,
+        $locationGroup
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -142,8 +158,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -152,16 +169,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTIme $end
-     * @param array     $filter
+     * @param       $locationId
+     * @param       $start
+     * @param       $end
+     * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getInspectionsStatistic($locationId, $start, $end,
-        $filter = []
+        $filter = [], $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -188,8 +205,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -198,15 +216,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTIme $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getIncidentsStatistic($locationId, $start, $end)
-    {
+    public function getIncidentsStatistic($locationId, $start, $end,
+        $locationGroup
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -228,8 +247,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -238,15 +258,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getFollowUpsDashboard($locationId, $start, $end)
-    {
+    public function getFollowUpsDashboard($locationId, $start, $end,
+        $locationGroup
+    ) {
         $client = new GuzzleClient();
 
         $query = [];
@@ -268,8 +289,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -278,16 +300,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $createdDate
-     * @param \DateTime $modifiedDate
-     * @param array     $filter
+     * @param       $locationId
+     * @param null  $createdDate
+     * @param null  $modifiedDate
+     * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSimpleTemplateReport($locationId, $createdDate = null,
-        $modifiedDate = null, $filter = []
+        $modifiedDate = null, $filter = [], $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -308,8 +330,9 @@ class Processor
             'get',
             $this->getPath('/reports/templates/simple?' . $query),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -318,19 +341,20 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $createdDate
-     * @param \DateTime $modifiedDate
-     * @param array     $filter
+     * @param       $locationId
+     * @param null  $createdDate
+     * @param null  $modifiedDate
+     * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSimpleIncidentTemplateReport(
         $locationId,
         $createdDate = null,
         $modifiedDate = null,
-        $filter = []
+        $filter = [],
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -351,8 +375,9 @@ class Processor
             'get',
             $this->getPath('/reports/incidentTemplates/simple?' . $query),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -361,20 +386,20 @@ class Processor
     }
 
     /**
-     * @param             $locationId
-     * @param string      $state
-     * @param \DateTime   $date
-     * @param null        $stateParam
-     * @param \DateTime   $start
-     * @param \DateTime   $end
-     * @param array       $filter
+     * @param        $locationId
+     * @param string $state
+     * @param null   $date
+     * @param null   $stateParam
+     * @param null   $start
+     * @param null   $end
+     * @param array  $filter
+     * @param        $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getInspectionReport($locationId, $state = 'completed',
         $date = null, $stateParam = null, $start = null, $end = null,
-        $filter = []
+        $filter = [], $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -407,8 +432,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -418,18 +444,18 @@ class Processor
     }
 
     /**
-     * @param string $inspectionId
-     * @param string $userId
-     * @param string $type
-     * @param string $view
-     * @param string $emails
-     * @param string $notes
+     * @param $inspectionId
+     * @param $userId
+     * @param $type
+     * @param $view
+     * @param $emails
+     * @param $notes
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSingleInspectionsReport(
-        $inspectionId, $userId, $type, $view, $emails, $notes
+        $inspectionId, $userId, $type, $view, $emails, $notes, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -457,8 +483,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-USER'       => $userId,
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -471,10 +498,11 @@ class Processor
      * @param $locationId
      * @param $start
      * @param $end
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function getIncidentsRate($locationId, $start, $end)
+    public function getIncidentsRate($locationId, $start, $end, $locationGroup)
     {
         $client = new GuzzleClient();
 
@@ -493,8 +521,9 @@ class Processor
                 sprintf("/dashboard/incidents/rir?%s", $query)
             ),
             [
-                'Content-Type' => "application/json",
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => "application/json",
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -507,10 +536,11 @@ class Processor
      * @param $locationId
      * @param $start
      * @param $end
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function getRecentFailures($locationId, $start, $end)
+    public function getRecentFailures($locationId, $start, $end, $locationGroup)
     {
         $client = new GuzzleClient();
 
@@ -529,8 +559,9 @@ class Processor
                 sprintf("/dashboard/recentFailures?%s", $query)
             ),
             [
-                'Content-Type' => "application/json",
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => "application/json",
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -539,21 +570,22 @@ class Processor
         return $response;
     }
 
-    /*
-     * @param           $userId
-     * @param           $type
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @param           $view
-     * @param           $emails
-     * @param           $notes
+    /**
+     * @param $userId
+     * @param $type
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $view
+     * @param $emails
+     * @param $notes
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getViolationsReport(
         $userId, $type, $locationId, $start, $end, $view, $emails,
-        $notes
+        $notes, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -585,9 +617,10 @@ class Processor
                 sprintf("/reports/violations?%s", $query)
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-USER'       => $userId,
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -597,20 +630,21 @@ class Processor
     }
 
     /**
-     * @param           $userId
-     * @param           $type
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
-     * @param           $view
-     * @param           $emails
-     * @param           $notes
+     * @param $userId
+     * @param $type
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $view
+     * @param $emails
+     * @param $notes
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getNeedToOrderReport(
         $userId, $type, $locationId, $start, $end, $view, $emails,
-        $notes
+        $notes, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -642,9 +676,10 @@ class Processor
                 sprintf("/reports/needtoorder?%s", $query)
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-USER'       => $userId,
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -654,16 +689,21 @@ class Processor
     }
 
     /**
-     * @param           $userId
-     * @param           $type
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param $userId
+     * @param $type
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $view
+     * @param $emails
+     * @param $notes
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getCoachingReport(
-        $userId, $type, $locationId, $start, $end, $view, $emails, $notes
+        $userId, $type, $locationId, $start, $end, $view, $emails, $notes,
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -695,9 +735,10 @@ class Processor
                 sprintf("/reports/coaching?%s", $query)
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-USER'       => $userId,
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -707,18 +748,18 @@ class Processor
     }
 
     /**
-     * @param string $incidentId
-     * @param string $userId
-     * @param string $type
-     * @param string $view
-     * @param string $emails
-     * @param string $notes
+     * @param $incidentId
+     * @param $userId
+     * @param $type
+     * @param $view
+     * @param $emails
+     * @param $notes
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSingleIncidentsReport(
-        $incidentId, $userId, $type, $view, $emails, $notes
+        $incidentId, $userId, $type, $view, $emails, $notes, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -743,8 +784,9 @@ class Processor
                 sprintf("/reports/incidents/single/%s?%s", $incidentId, $query)
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-USER'       => $userId
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -756,10 +798,11 @@ class Processor
     /**
      * @param       $locationId
      * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getSpecificReport($locationId, $filter = [])
+    public function getSpecificReport($locationId, $filter = [], $locationGroup)
     {
         $client = new GuzzleClient();
 
@@ -775,7 +818,9 @@ class Processor
                 sprintf("/reports/specific?%s", $query)
             ),
             [
-                'X-LOCATION' => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -785,15 +830,15 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param null      $templateId
-     * @param \DateTime $createdDate
-     * @param \DateTime $modifiedDate
-     * @param null      $state
-     * @param array     $filter
+     * @param       $locationId
+     * @param null  $templateId
+     * @param null  $createdDate
+     * @param null  $modifiedDate
+     * @param null  $state
+     * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSimpleTemplateVersionReport(
         $locationId,
@@ -801,7 +846,8 @@ class Processor
         $createdDate = null,
         $modifiedDate = null,
         $state = null,
-        $filter = []
+        $filter = [],
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -833,8 +879,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -844,20 +891,20 @@ class Processor
     }
 
     /**
-     * @param             $locationId
-     * @param string      $state
-     * @param \DateTime   $date
-     * @param null        $stateParam
-     * @param \DateTime   $start
-     * @param \DateTime   $end
-     * @param array       $filter
+     * @param           $locationId
+     * @param string    $state
+     * @param \DateTime $date
+     * @param null      $stateParam
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param array     $filter
+     * @param           $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getIncidentReport($locationId, $state = 'completed',
         $date = null, $stateParam = null, $start = null, $end = null,
-        $filter = []
+        $filter = [], $locationGroup
     ) {
         $client = new GuzzleClient();
         $query = [];
@@ -887,8 +934,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
         $response = $this->send($client, $request);
@@ -902,9 +950,9 @@ class Processor
      * @param \DateTime $modifiedDate
      * @param null      $state
      * @param array     $filter
+     * @param           $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSimpleIncidentTemplateVersionReport(
         $locationId,
@@ -912,7 +960,8 @@ class Processor
         $createdDate = null,
         $modifiedDate = null,
         $state = null,
-        $filter = []
+        $filter = [],
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -944,8 +993,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -955,21 +1005,22 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $createdDate
-     * @param \DateTime $completedDate
-     * @param null      $state
-     * @param array     $filter
+     * @param       $locationId
+     * @param null  $createdDate
+     * @param null  $completedDate
+     * @param null  $state
+     * @param array $filter
+     * @param       $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
     public function getSimpleFollowUpReport(
         $locationId,
         $createdDate = null,
         $completedDate = null,
         $state = null,
-        $filter = []
+        $filter = [],
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -998,8 +1049,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -1009,15 +1061,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getInspectionsDashboardActivity($locationId, $start, $end)
-    {
+    public function getInspectionsDashboardActivity($locationId, $start, $end,
+        $locationGroup
+    ) {
         $client = new GuzzleClient();
 
         $query = [
@@ -1036,8 +1089,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -1047,15 +1101,16 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \DateTime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
      *
-     * @return mixed
-     * @throws \Exception
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getIncidentsDashboardActivity($locationId, $start, $end)
-    {
+    public function getIncidentsDashboardActivity($locationId, $start, $end,
+        $locationGroup
+    ) {
         $client = new GuzzleClient();
 
         $query = [
@@ -1074,8 +1129,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -1088,11 +1144,12 @@ class Processor
      * @param $locationId
      * @param $start
      * @param $end
+     * @param $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
     public function getInspectionsDashboardDailyActivity($locationId, $start,
-        $end
+        $end, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -1112,8 +1169,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
@@ -1123,11 +1181,15 @@ class Processor
     }
 
     /**
-     * @param           $locationId
-     * @param \Datetime $start
-     * @param \DateTime $end
+     * @param $locationId
+     * @param $start
+     * @param $end
+     * @param $locationGroup
+     *
+     * @return \Psr\Http\Message\StreamInterface
      */
-    public function getIncidentsDashboardDailyActivity($locationId, $start, $end
+    public function getIncidentsDashboardDailyActivity($locationId, $start,
+        $end, $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -1147,8 +1209,9 @@ class Processor
                 )
             ),
             [
-                'Content-Type' => 'application/json',
-                'X-LOCATION'   => $locationId
+                'Content-Type'     => 'application/json',
+                'X-LOCATION'       => $locationId,
+                'x-location-group' => $locationGroup
             ]
         );
 
