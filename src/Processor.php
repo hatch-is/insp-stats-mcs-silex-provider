@@ -302,14 +302,26 @@ class Processor
     /**
      * @param       $locationId
      * @param null  $createdDate
+     * @param null  $createdDateStart
+     * @param null  $createdDateEnd
      * @param null  $modifiedDate
+     * @param null  $modifiedDateStart
+     * @param null  $modifiedDateEnd
      * @param array $filter
      * @param       $locationGroup
      *
      * @return \Psr\Http\Message\StreamInterface
      */
-    public function getSimpleTemplateReport($locationId, $createdDate = null,
-        $modifiedDate = null, $filter = [], $locationGroup
+    public function getSimpleTemplateReport(
+        $locationId,
+        $createdDate = null,
+        $createdDateStart = null,
+        $createdDateEnd = null,
+        $modifiedDate = null,
+        $modifiedDateStart = null,
+        $modifiedDateEnd = null,
+        $filter = [],
+        $locationGroup
     ) {
         $client = new GuzzleClient();
 
@@ -317,8 +329,29 @@ class Processor
         if (null !== $createdDate) {
             $query['createdDate'] = date('c', $createdDate->getTimestamp());
         }
+        if (null !== $createdDateStart) {
+            $query['createdDateStart'] = date(
+                'c', $createdDateStart->getTimestamp()
+            );
+        }
+        if (null !== $createdDateEnd) {
+            $query['createdDateEnd'] = date(
+                'c', $createdDateEnd->getTimestamp()
+            );
+        }
+
         if (null !== $modifiedDate) {
-            $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());;
+            $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());
+        }
+        if (null !== $modifiedDateStart) {
+            $query['modifiedDateStart'] = date(
+                'c', $modifiedDateStart->getTimestamp()
+            );
+        }
+        if (null !== $modifiedDateEnd) {
+            $query['modifiedDateEnd'] = date(
+                'c', $modifiedDateEnd->getTimestamp()
+            );
         }
         if (!empty($filter)) {
             $query['filter'] = json_encode($filter);
@@ -833,7 +866,11 @@ class Processor
      * @param       $locationId
      * @param null  $templateId
      * @param null  $createdDate
+     * @param null  $createdDateStart
+     * @param null  $createdDateEnd
      * @param null  $modifiedDate
+     * @param null  $modifiedDateStart
+     * @param null  $modifiedDateEnd
      * @param null  $state
      * @param array $filter
      * @param       $locationGroup
@@ -844,7 +881,11 @@ class Processor
         $locationId,
         $templateId = null,
         $createdDate = null,
+        $createdDateStart = null,
+        $createdDateEnd = null,
         $modifiedDate = null,
+        $modifiedDateStart = null,
+        $modifiedDateEnd = null,
         $state = null,
         $filter = [],
         $locationGroup
@@ -852,12 +893,36 @@ class Processor
         $client = new GuzzleClient();
 
         $query = [];
+
         if (null !== $createdDate) {
             $query['createdDate'] = date('c', $createdDate->getTimestamp());
         }
+        if (null !== $createdDateStart) {
+            $query['createdDateStart'] = date(
+                'c', $createdDateStart->getTimestamp()
+            );
+        }
+        if (null !== $createdDateEnd) {
+            $query['createdDateEnd'] = date(
+                'c', $createdDateEnd->getTimestamp()
+            );
+        }
+
+
         if (null !== $modifiedDate) {
             $query['modifiedDate'] = date('c', $modifiedDate->getTimestamp());
         }
+        if (null !== $modifiedDateStart) {
+            $query['modifiedDateStart'] = date(
+                'c', $modifiedDateStart->getTimestamp()
+            );
+        }
+        if (null !== $modifiedDateEnd) {
+            $query['modifiedDateEnd'] = date(
+                'c', $modifiedDateEnd->getTimestamp()
+            );
+        }
+
         if (null !== $state) {
             $query['state'] = $state;
         }
@@ -1007,7 +1072,11 @@ class Processor
     /**
      * @param       $locationId
      * @param null  $createdDate
+     * @param null  $createdDateStart
+     * @param null  $createdDateEnd
      * @param null  $completedDate
+     * @param null  $completedDateStart
+     * @param null  $completedDateEnd
      * @param null  $state
      * @param array $filter
      * @param       $locationGroup
@@ -1017,7 +1086,11 @@ class Processor
     public function getSimpleFollowUpReport(
         $locationId,
         $createdDate = null,
+        $createdDateStart = null,
+        $createdDateEnd = null,
         $completedDate = null,
+        $completedDateStart = null,
+        $completedDateEnd = null,
         $state = null,
         $filter = [],
         $locationGroup
@@ -1025,11 +1098,35 @@ class Processor
         $client = new GuzzleClient();
 
         $query = [];
+
+        //createdDate
         if (null !== $createdDate) {
             $query['createdDate'] = date('c', $createdDate->getTimestamp());
         }
+        if (null !== $createdDateStart) {
+            $query['createdDateStart'] = date(
+                'c', $createdDateStart->getTimestamp()
+            );
+        }
+        if (null !== $createdDateEnd) {
+            $query['createdDateEnd'] = date(
+                'c', $createdDateEnd->getTimestamp()
+            );
+        }
+
+        //completedDate
         if (null !== $completedDate) {
             $query['completedDate'] = date('c', $completedDate->getTimestamp());
+        }
+        if (null !== $completedDateStart) {
+            $query['completedDateStart'] = date(
+                'c', $completedDateStart->getTimestamp()
+            );
+        }
+        if (null !== $completedDateEnd) {
+            $query['completedDateEnd'] = date(
+                'c', $completedDateEnd->getTimestamp()
+            );
         }
         if (null !== $state) {
             $query['state'] = $state;
