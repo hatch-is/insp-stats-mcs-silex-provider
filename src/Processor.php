@@ -780,6 +780,46 @@ class Processor
         return $response;
     }
 
+	/**
+	 * @param $userId
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
+    public function getAerialReport(
+    	$userId, $locationId, $start, $end, $locationGroup
+	)
+	{
+		$client = new GuzzleClient();
+		$query = [];
+		if (null !== $start) {
+			$query['start'] = date('c', $start->getTimestamp());
+		}
+		if (null !== $end) {
+			$query['end'] = date('c', $end->getTimestamp());
+		}
+		$query = http_build_query($query);
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf("/reports/aerial?%s", $query)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-USER'           => $userId,
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+
     /**
      * @param $incidentId
      * @param $userId
