@@ -426,18 +426,18 @@ class Processor
 	 * @param null   $start
 	 * @param null   $end
 	 * @param array  $filter
-	 * @param        $locationGroup
 	 * @param        $type
 	 * @param        $view
 	 * @param        $emails
 	 * @param        $notes
 	 * @param        $userId
+	 * @param        $locationGroup
 	 *
 	 * @return \Psr\Http\Message\StreamInterface
 	 */
     public function getInspectionReport($locationId, $state = 'completed',
         $date = null, $stateParam = null, $start = null, $end = null,
-        $filter = [], $locationGroup, $type, $view, $emails, $notes, $userId
+        $filter = [], $type, $view, $emails, $notes, $userId, $locationGroup
     ) {
         $client = new GuzzleClient();
 
