@@ -418,21 +418,26 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param        $locationId
-     * @param string $state
-     * @param null   $date
-     * @param null   $stateParam
-     * @param null   $start
-     * @param null   $end
-     * @param array  $filter
-     * @param        $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param        $locationId
+	 * @param string $state
+	 * @param null   $date
+	 * @param null   $stateParam
+	 * @param null   $start
+	 * @param null   $end
+	 * @param array  $filter
+	 * @param        $locationGroup
+	 * @param        $type
+	 * @param        $view
+	 * @param        $emails
+	 * @param        $notes
+	 * @param        $userId
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
     public function getInspectionReport($locationId, $state = 'completed',
         $date = null, $stateParam = null, $start = null, $end = null,
-        $filter = [], $locationGroup
+        $filter = [], $locationGroup, $type, $view, $emails, $notes, $userId
     ) {
         $client = new GuzzleClient();
 
@@ -452,6 +457,18 @@ class Processor
         if (!empty($filter)) {
             $query['filter'] = json_encode($filter);
         }
+		if (null != $view) {
+			$query['view'] = $view;
+		}
+		if (null != $emails) {
+			$query['emails'] = $emails;
+		}
+		if (null != $notes) {
+			$query['notes'] = $notes;
+		}
+		if ($type != null) {
+			$query['type'] = $type;
+		}
 
         $query = http_build_query($query);
 
@@ -467,7 +484,8 @@ class Processor
             [
                 'Content-Type'     => 'application/json',
                 'X-LOCATION'       => $locationId,
-                'x-location-group' => $locationGroup
+                'x-location-group' => $locationGroup,
+				'X-USER'           => $userId
             ]
         );
 
