@@ -299,19 +299,24 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param       $locationId
-     * @param null  $createdDate
-     * @param null  $createdDateStart
-     * @param null  $createdDateEnd
-     * @param null  $modifiedDate
-     * @param null  $modifiedDateStart
-     * @param null  $modifiedDateEnd
-     * @param array $filter
-     * @param       $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param       $locationId
+	 * @param null  $createdDate
+	 * @param null  $createdDateStart
+	 * @param null  $createdDateEnd
+	 * @param null  $modifiedDate
+	 * @param null  $modifiedDateStart
+	 * @param null  $modifiedDateEnd
+	 * @param array $filter
+	 * @param       $locationGroup
+	 * @param       $type
+	 * @param       $view
+	 * @param       $emails
+	 * @param       $notes
+	 * @param       $userId
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
     public function getSimpleTemplateReport(
         $locationId,
         $createdDate = null,
@@ -321,7 +326,12 @@ class Processor
         $modifiedDateStart = null,
         $modifiedDateEnd = null,
         $filter = [],
-        $locationGroup
+        $locationGroup,
+		$type,
+		$view,
+		$emails,
+		$notes,
+		$userId
     ) {
         $client = new GuzzleClient();
 
@@ -356,7 +366,18 @@ class Processor
         if (!empty($filter)) {
             $query['filter'] = json_encode($filter);
         }
-
+		if (null != $view) {
+			$query['view'] = $view;
+		}
+		if (null != $emails) {
+			$query['emails'] = $emails;
+		}
+		if (null != $notes) {
+			$query['notes'] = $notes;
+		}
+		if ($type != null) {
+			$query['type'] = $type;
+		}
         $query = http_build_query($query);
 
         $request = new Request(
@@ -365,7 +386,8 @@ class Processor
             [
                 'Content-Type'     => 'application/json',
                 'X-LOCATION'       => $locationId,
-                'x-location-group' => $locationGroup
+                'x-location-group' => $locationGroup,
+				'X-USER'           => $userId
             ]
         );
 
@@ -979,21 +1001,26 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param       $locationId
-     * @param null  $templateId
-     * @param null  $createdDate
-     * @param null  $createdDateStart
-     * @param null  $createdDateEnd
-     * @param null  $modifiedDate
-     * @param null  $modifiedDateStart
-     * @param null  $modifiedDateEnd
-     * @param null  $state
-     * @param array $filter
-     * @param       $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param       $locationId
+	 * @param null  $templateId
+	 * @param null  $createdDate
+	 * @param null  $createdDateStart
+	 * @param null  $createdDateEnd
+	 * @param null  $modifiedDate
+	 * @param null  $modifiedDateStart
+	 * @param null  $modifiedDateEnd
+	 * @param null  $state
+	 * @param array $filter
+	 * @param       $locationGroup
+	 * @param       $type
+	 * @param       $view
+	 * @param       $emails
+	 * @param       $notes
+	 * @param       $userId
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
     public function getSimpleTemplateVersionReport(
         $locationId,
         $templateId = null,
@@ -1005,7 +1032,12 @@ class Processor
         $modifiedDateEnd = null,
         $state = null,
         $filter = [],
-        $locationGroup
+        $locationGroup,
+		$type,
+		$view,
+		$emails,
+		$notes,
+		$userId
     ) {
         $client = new GuzzleClient();
 
@@ -1050,6 +1082,19 @@ class Processor
             $query['filter'] = json_encode($filter);
         }
 
+		if (null != $view) {
+			$query['view'] = $view;
+		}
+		if (null != $emails) {
+			$query['emails'] = $emails;
+		}
+		if (null != $notes) {
+			$query['notes'] = $notes;
+		}
+		if ($type != null) {
+			$query['type'] = $type;
+		}
+
         $query = http_build_query($query);
 
         $request = new Request(
@@ -1063,7 +1108,8 @@ class Processor
             [
                 'Content-Type'     => 'application/json',
                 'X-LOCATION'       => $locationId,
-                'x-location-group' => $locationGroup
+                'x-location-group' => $locationGroup,
+				'X-USER'           => $userId
             ]
         );
 
@@ -1186,20 +1232,25 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param       $locationId
-     * @param null  $createdDate
-     * @param null  $createdDateStart
-     * @param null  $createdDateEnd
-     * @param null  $completedDate
-     * @param null  $completedDateStart
-     * @param null  $completedDateEnd
-     * @param null  $state
-     * @param array $filter
-     * @param       $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param       $locationId
+	 * @param null  $createdDate
+	 * @param null  $createdDateStart
+	 * @param null  $createdDateEnd
+	 * @param null  $completedDate
+	 * @param null  $completedDateStart
+	 * @param null  $completedDateEnd
+	 * @param null  $state
+	 * @param array $filter
+	 * @param       $locationGroup
+	 * @param       $type
+	 * @param       $view
+	 * @param       $emails
+	 * @param       $notes
+	 * @param       $userId
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
     public function getSimpleFollowUpReport(
         $locationId,
         $createdDate = null,
@@ -1210,7 +1261,12 @@ class Processor
         $completedDateEnd = null,
         $state = null,
         $filter = [],
-        $locationGroup
+        $locationGroup,
+		$type,
+		$view,
+		$emails,
+		$notes,
+		$userId
     ) {
         $client = new GuzzleClient();
 
@@ -1252,6 +1308,19 @@ class Processor
             $query['filter'] = json_encode($filter);
         }
 
+		if (null != $view) {
+			$query['view'] = $view;
+		}
+		if (null != $emails) {
+			$query['emails'] = $emails;
+		}
+		if (null != $notes) {
+			$query['notes'] = $notes;
+		}
+		if ($type != null) {
+			$query['type'] = $type;
+		}
+
         $query = http_build_query($query);
 
         $request = new Request(
@@ -1265,7 +1334,8 @@ class Processor
             [
                 'Content-Type'     => 'application/json',
                 'X-LOCATION'       => $locationId,
-                'x-location-group' => $locationGroup
+                'x-location-group' => $locationGroup,
+				'X-USER'           => $userId,
             ]
         );
 
