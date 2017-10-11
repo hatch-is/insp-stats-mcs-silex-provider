@@ -702,6 +702,74 @@ class Processor
         return $response;
     }
 
+	/**
+	 * @param $userId
+	 * @param $type
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $view
+	 * @param $emails
+	 * @param $notes
+	 * @param $locationGroup
+	 * @param $name
+	 * @param $locations
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 */
+    public function getBasedOnTemplateReport(
+		$userId, $type, $locationId, $start, $end, $view, $emails,
+		$notes, $locationGroup, $name, $locations
+	) {
+		$client = new GuzzleClient();
+
+		$query = [];
+		if (null !== $start) {
+			$query['start'] = date('c', $start->getTimestamp());
+		}
+		if (null !== $end) {
+			$query['end'] = date('c', $end->getTimestamp());
+		}
+
+		if (null != $view) {
+			$query['view'] = $view;
+		}
+		if (null != $emails) {
+			$query['emails'] = $emails;
+		}
+		if (null != $notes) {
+			$query['notes'] = $notes;
+		}
+		if ($type != null) {
+			$query['type'] = $type;
+		}
+		if ($name != null) {
+			$query['name'] = $name;
+		}
+		if ($locations != null) {
+			$query['locations'] = $locations;
+		}
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf("/reports/based/templates?%s", $query)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-USER'           => $userId,
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+
     /**
      * @param $userId
      * @param $type
