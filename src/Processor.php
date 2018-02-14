@@ -1412,14 +1412,15 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param $locationId
-     * @param $start
-     * @param $end
-     * @param $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
     public function getInspectionsDashboardActivity($locationId, $start, $end,
         $locationGroup
     ) {
@@ -1451,6 +1452,44 @@ class Processor
 
         return $response;
     }
+
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $period
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
+    public function getDashboardInspectionActivity($locationId, $start, $end, $period, $locationGroup)
+	{
+		$client = new GuzzleClient();
+
+		$query = [
+			'start'  => date('c', $start->getTimestamp()),
+			'end'    => date('c', $end->getTimestamp()),
+			'period' => $period
+		];
+
+		$query = http_build_query($query);
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf('/dashboard/inspections/activity?%s',$query)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
 
     /**
      * @param $locationId
