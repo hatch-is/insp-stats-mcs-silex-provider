@@ -1457,6 +1457,46 @@ class Processor
 	 * @param $locationId
 	 * @param $start
 	 * @param $end
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
+    public function getDashboardInspectionByUsersActivity($locationId, $start, $end,
+		$locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp())
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/userInspections/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
 	 * @param $period
 	 * @param $locationGroup
 	 *
