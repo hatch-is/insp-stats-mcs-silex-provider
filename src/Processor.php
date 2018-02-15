@@ -1493,6 +1493,39 @@ class Processor
 
 		return $response;
 	}
+
+	public function getDashboardInspectionByLocationsActivity($locationId, $start, $end,
+		$locationGroup, $locations
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp()),
+			'locations' => $locations
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/locationsInspections/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
 	/**
 	 * @param $locationId
 	 * @param $start
