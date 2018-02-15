@@ -1495,7 +1495,7 @@ class Processor
 	}
 
 	public function getDashboardInspectionByLocationsActivity($locationId, $start, $end,
-		$locationGroup, $locations
+		$locations, $locationGroup
 	) {
 		$client = new GuzzleClient();
 
