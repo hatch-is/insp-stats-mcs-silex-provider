@@ -1558,6 +1558,38 @@ class Processor
 
 		return $response;
 	}
+
+	public function getDashboardTabsActivity($locationId, $start, $end,
+		$locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp())
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/tabs/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
 	/**
 	 * @param $locationId
 	 * @param $start
