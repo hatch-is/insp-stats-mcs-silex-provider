@@ -1412,14 +1412,15 @@ class Processor
         return $response;
     }
 
-    /**
-     * @param $locationId
-     * @param $start
-     * @param $end
-     * @param $locationGroup
-     *
-     * @return \Psr\Http\Message\StreamInterface
-     */
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
     public function getInspectionsDashboardActivity($locationId, $start, $end,
         $locationGroup
     ) {
@@ -1451,6 +1452,181 @@ class Processor
 
         return $response;
     }
+
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
+    public function getDashboardInspectionByUsersActivity($locationId, $start, $end,
+		$locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp())
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/userInspections/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+
+	public function getDashboardInspectionByLocationsActivity($locationId, $start, $end,
+		$locations, $locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp()),
+			'locations' => $locations
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/locationsInspections/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+
+	public function getDashboardFollowUpsActivity($locationId, $start, $end,
+		$locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp())
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/followUps/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+
+	public function getDashboardTabsActivity($locationId, $start, $end,
+		$locationGroup
+	) {
+		$client = new GuzzleClient();
+
+		$query = [
+			'start' => date('c', $start->getTimestamp()),
+			'end'   => date('c', $end->getTimestamp())
+		];
+
+		$query = http_build_query($query);
+
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf(
+					'/dashboard/tabs/activity?%s',
+					$query
+				)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
+	/**
+	 * @param $locationId
+	 * @param $start
+	 * @param $end
+	 * @param $period
+	 * @param $locationGroup
+	 *
+	 * @return \Psr\Http\Message\StreamInterface
+	 * @throws \Exception
+	 */
+    public function getDashboardInspectionActivity($locationId, $start, $end, $period, $locationGroup)
+	{
+		$client = new GuzzleClient();
+
+		$query = [
+			'start'  => date('c', $start->getTimestamp()),
+			'end'    => date('c', $end->getTimestamp()),
+			'period' => $period
+		];
+
+		$query = http_build_query($query);
+		$request = new Request(
+			'get',
+			$this->getPath(
+				sprintf('/dashboard/inspections/activity?%s',$query)
+			),
+			[
+				'Content-Type'     => 'application/json',
+				'X-LOCATION'       => $locationId,
+				'x-location-group' => $locationGroup
+			]
+		);
+
+		$response = $this->send($client, $request);
+
+		return $response;
+	}
 
     /**
      * @param $locationId
