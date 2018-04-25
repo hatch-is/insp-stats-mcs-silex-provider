@@ -1178,6 +1178,47 @@ class Processor
         return $response;
     }
 
+    public function getInspections($where, $skip, $limit, $search, $location, $userId, $locationGroup) {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if ($where != null) {
+            $query['where'] = $where;
+        }
+        if ($skip != null) {
+            $query['skip'] = $skip;
+        }
+        if ($limit != null) {
+            $query['limit'] = $limit;
+        }
+        if ($search != null) {
+            $query['search'] = $search;
+        }
+
+        if (count($query) > 0) {
+            $q = http_build_query(['filter' => json_decode($query)]);
+        } else {
+            $q = "";
+        }
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/inspections?%s", $q)
+            ),
+            [
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup,
+                'x-location'       => $location
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
     /**
      * @param       $locationId
      * @param array $filter
