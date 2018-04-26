@@ -1182,7 +1182,7 @@ class Processor
         $client = new GuzzleClient();
 
         if ($filter != null) {
-            $q = http_build_query(['filter' => json_decode($query)]);
+            $q = http_build_query(['filter' => json_decode($filter)]);
         } else {
             $q = "";
         }
