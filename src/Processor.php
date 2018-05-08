@@ -772,7 +772,7 @@ class Processor
 
 	public function getChartsInspectionsReport(
 		$userId, $type, $locationId, $start, $end, $view, $emails,
-		$notes, $locationGroup, $state, $locations
+		$notes, $locationGroup, $state, $locations, $nin
 	) {
 		$client = new GuzzleClient();
 
@@ -801,6 +801,9 @@ class Processor
 		}
 		if ($locations != null) {
 			$query['locations'] = $locations;
+		}
+		if ($nin != null) {
+			$query['nin'] = $nin;
 		}
 
 		$query = http_build_query($query);
@@ -825,7 +828,7 @@ class Processor
 
 	public function getChartsFollowUpsReport(
 		$userId, $type, $locationId, $start, $end, $view, $emails,
-		$notes, $locationGroup, $state, $locations
+		$notes, $locationGroup, $state, $locations, $nin
 	) {
 		$client = new GuzzleClient();
 
@@ -854,6 +857,9 @@ class Processor
 		}
 		if ($locations != null) {
 			$query['locations'] = $locations;
+		}
+		if ($nin != null) {
+			$query['nin'] = $nin;
 		}
 
 		$query = http_build_query($query);
