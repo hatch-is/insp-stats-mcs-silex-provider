@@ -772,7 +772,7 @@ class Processor
 
 	public function getChartsInspectionsReport(
 		$userId, $type, $locationId, $start, $end, $view, $emails,
-		$notes, $locationGroup, $state, $locations
+		$notes, $locationGroup, $state, $locations, $nin
 	) {
 		$client = new GuzzleClient();
 
@@ -801,6 +801,9 @@ class Processor
 		}
 		if ($locations != null) {
 			$query['locations'] = $locations;
+		}
+		if ($nin != null) {
+			$query['nin'] = $nin;
 		}
 
 		$query = http_build_query($query);
@@ -825,7 +828,7 @@ class Processor
 
 	public function getChartsFollowUpsReport(
 		$userId, $type, $locationId, $start, $end, $view, $emails,
-		$notes, $locationGroup, $state, $locations
+		$notes, $locationGroup, $state, $locations, $nin
 	) {
 		$client = new GuzzleClient();
 
@@ -854,6 +857,9 @@ class Processor
 		}
 		if ($locations != null) {
 			$query['locations'] = $locations;
+		}
+		if ($nin != null) {
+			$query['nin'] = $nin;
 		}
 
 		$query = http_build_query($query);
@@ -1133,6 +1139,70 @@ class Processor
                 'Content-Type'     => 'application/json',
                 'X-USER'           => $userId,
                 'x-location-group' => $locationGroup
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
+    public function searchInspections($q, $location, $templates, $skip, $limit, $userId, $locationGroup)
+    {
+        $client = new GuzzleClient();
+
+        $query = [];
+        if ($q != null) {
+            $query['q'] = $q;
+        }
+        if ($templates != null) {
+            $query['templates'] = $templates;
+        }
+        if ($skip != null) {
+            $query['skip'] = $skip;
+        }
+        if ($limit != null) {
+            $query['limit'] = $limit;
+        }
+        $query = http_build_query($query);
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/search/inspections?%s", $query)
+            ),
+            [
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup,
+                'x-location'       => $location
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
+    public function getInspections($filter, $location, $userId, $locationGroup) {
+        $client = new GuzzleClient();
+
+        if ($filter != null) {
+            $q = http_build_query(['filter' => json_encode($filter)]);
+        } else {
+            $q = "";
+        }
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/inspections?%s", $q)
+            ),
+            [
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup,
+                'x-location'       => $location
             ]
         );
 
