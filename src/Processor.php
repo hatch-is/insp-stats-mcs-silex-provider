@@ -1210,6 +1210,60 @@ class Processor
 
         return $response;
     }
+    
+    public function getFollowUps($filter, $location, $userId, $locationGroup) {
+        $client = new GuzzleClient();
+
+        if ($filter != null) {
+            $q = http_build_query(['filter' => json_encode($filter)]);
+        } else {
+            $q = "";
+        }
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/follow-ups?%s", $q)
+            ),
+            [
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup,
+                'x-location'       => $location
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
+
+    public function getIncidents($filter, $location, $userId, $locationGroup) {
+        $client = new GuzzleClient();
+
+        if ($filter != null) {
+            $q = http_build_query(['filter' => json_encode($filter)]);
+        } else {
+            $q = "";
+        }
+
+        $request = new Request(
+            'get',
+            $this->getPath(
+                sprintf("/incidents?%s", $q)
+            ),
+            [
+                'Content-Type'     => 'application/json',
+                'X-USER'           => $userId,
+                'x-location-group' => $locationGroup,
+                'x-location'       => $location
+            ]
+        );
+
+        $response = $this->send($client, $request);
+
+        return $response;
+    }
 
     /**
      * @param       $locationId
